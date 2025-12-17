@@ -1,0 +1,10 @@
+streamlit
+pandas
+pymongo
+neo4j
+pyvis
+plotly
+scikit-learn
+joblib
+numpy
+matplotlib

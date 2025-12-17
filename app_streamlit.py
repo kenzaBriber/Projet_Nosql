@@ -658,7 +658,7 @@ with tab_combo:
             st.info("Aucun doc Mongo trouvé pour cet entry (ou entry vide).")
 
     with right:
-        mode = st.radio("Voisinage", ["1-hop", "2-hop"], horizontal=True)
+        mode = st.radio("Voisinage", ["Voisins directs", "Voisins des voisins"], horizontal=True)
         c1, c2, c3 = st.columns(3)
         with c1:
             limite_aretes = st.slider("Limite arêtes (combo)", 10, 400, 120, 10, key="combo_lim")
@@ -851,13 +851,15 @@ with tab_stats:
             labels = ["GO terms", "EC numbers", "InterPro domains"]
             values = [mongo_s["go_annot"], mongo_s["ec_annot"], mongo_s["ipr_annot"]]
 
-            fig1 = px.pie(
-                names=labels,
-                values=values,
-                title="Annotations par type",
-                hole=0.35  # donut (plus moderne)
+            fig = px.bar(
+                x=["GO terms", "EC numbers", "InterPro domains"],
+                y=[mongo_s["go_annot"], mongo_s["ec_annot"], mongo_s["ipr_annot"]],
+                labels={"x": "Type d’annotation", "y": "Nombre de protéines"},
+                title="Couverture des annotations par type"
             )
-            st.plotly_chart(fig1, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True)
+
+           
 
         # --- Camembert 2 : labelled vs unlabelled ---
         with col_right:
@@ -902,15 +904,7 @@ with tab_stats:
                 st.caption("—")
 
 
-        # --- Moyennes annotations (Mongo)
-        st.divider()
-        st.markdown("### 📌 Résumé annotations (MongoDB)")
-        a = mongo_s["avg"]
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Moyenne #GO / protéine", round(float(a.get("avg_go", 0)), 2))
-        m2.metric("Moyenne #EC / protéine", round(float(a.get("avg_ec", 0)), 2))
-        m3.metric("Moyenne #InterPro / protéine", round(float(a.get("avg_ipr", 0)), 2))
-
+      
 
 with tab_annot:
     st.subheader(" Annotation (Label Propagation)")
